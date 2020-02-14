@@ -1,10 +1,15 @@
-import math
+# Тесты
+test = []
 
-string = '13 февраля 2020'
-string = '30 октября 2019'
-string = '16 февраля 2020'
-
+# Объявление функций
 def get_data(string):
+    '''Функция преобразовывает строку пользователся в набор числовых
+    значений для дальнейшей работы с ними.
+
+    :param string typed string:
+    :return day, month, century, year typed tuple:
+
+    '''
     month = {'мар': 1, 'апр': 2, 'мая': 3, 'июн': 4, 'июл': 5, 'авг': 6, 'сен': 7, 'окт': 8, 'ноя': 9, 'дек': 10,
              'янв': 11, 'фев': 12}
     data = string.split()
@@ -16,14 +21,40 @@ def get_data(string):
     c = int(data[2]) // 100
     return d, m, c, y
 
-data = get_data(string)
-print(data)
-
 def get_answer(d, m, c, y):
+    '''Функция вычисляет день недели по заданной пользователем дате.
+
+    :param d typed int:
+    :param m typed int:
+    :param c typed int:
+    :param y typed int:
+    :return answer typed int (0-6):
+
+    '''
+
     answer = (d + int((13*m-1)/5) + y + int(y/4) -2*c + int(c/4) ) % 7
     return answer
 
+def prettify():
+    '''
+    Функция форматного вывода
+    '''
+    pass
 
-res = get_answer(*data)
+# Основная часть
+message = '1) Продолжить \n2) Выход\n>>>'   # Пригласительное сообщение меню
+choice = 1 # ПЦ
+while choice != 2:
 
-print(res)
+    date = input('Введите дату >>> ')
+    print('-' * 23)
+    data = get_data(date)
+    res = get_answer(*data)
+    print(res)
+    #prettify()
+
+    try:
+        choice = int(input(message))
+    except ValueError:
+        print("Недопустимое значение.")
+        choice = 1

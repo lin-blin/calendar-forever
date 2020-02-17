@@ -1,8 +1,10 @@
 # Тесты
 test = []
-month = {'мар': 1, 'апр': 2, 'мая': 3, 'июн': 4, 'июл': 5, 'авг': 6, 'сен': 7, 'окт': 8, 'ноя': 9, 'дек': 10,
+
+# Данные
+monthes = {'мар': 1, 'апр': 2, 'мая': 3, 'июн': 4, 'июл': 5, 'авг': 6, 'сен': 7, 'окт': 8, 'ноя': 9, 'дек': 10,
              'янв': 11, 'фев': 12}
-days = ['Воскресенье', 'Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота']
+days = ['воскресенье', 'понедельник', 'вторник', 'среда', 'четверг', 'пятница', 'суббота']
 
 # Объявление функций
 def get_data(string, month):
@@ -38,26 +40,35 @@ def get_answer(d, m, c, y):
     answer = (d + int((13*m-1)/5) + y + int(y/4) -2*c + int(c/4) ) % 7
     return answer
 
-def prettify():
-    '''
-    Функция форматного вывода
-    '''
-    pass
+def prettify(weekday, *data):
+    print('День недели - {day}'.format(day=weekday))
+
+    ones = ["", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX"]
+    tens = ["", "X", "XX", "XXX", "XL", "L", "LX", "LXX", "LXXX", "XC"]
+    hunds = ["", "C", "CC", "CCC", "CD", "D", "DC", "DCC", "DCCC", "CM"]
+    thous = ["", "M", "MM", "MMM", "MMMM"]
+
+    century = data[2] + 1
+    t = thous[century // 1000]
+    h = hunds[century // 100 % 10]
+    te = tens[century // 10 % 10]
+    o = ones[century % 10]
+    print('Век: {0}'.format(t + h + te + o))
+
+    month = data[1]
+    if month < 4:
+        season = 'весна'
+    elif month < 7:
+        season = 'лето'
+    elif month < 10:
+        season = 'осень'
+    else:
+        season = 'зима'
+    print('Сезон: {0}'.format(season))
 
 # Основная часть
-message = '1) Продолжить \n2) Выход\n>>>'   # Пригласительное сообщение меню
-choice = 1 # ПЦ
-while choice != 2:
-
-    date = input('Введите дату >>> ')
-    print('-' * 23)
-    data = get_data(date, month)
-    res = get_answer(*data)
-    print(days[res])
-    #prettify()
-
-    try:
-        choice = int(input(message))
-    except ValueError:
-        print("Недопустимое значение.")
-        choice = 1
+date = input('Введите дату >>> ')
+print('-' * 23)
+data = get_data(date, monthes)
+weekday =  days[get_answer(*data)]
+prettify(weekday, *data)

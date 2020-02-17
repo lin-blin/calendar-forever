@@ -72,3 +72,26 @@ print('-' * 23)
 data = get_data(date, monthes)
 weekday =  days[get_answer(*data)]
 prettify(weekday, *data)
+
+#Проверка при помощи встроенного модуля
+
+import datetime
+
+data = date.split()
+d = int(data[0])
+m1 = monthes[data[1][0:3]]
+m = m1 - 10 if m1 > 10 else m1 + 2
+y = int(data[2])
+
+day_ = datetime.datetime(y, m, d)
+weekday_ = datetime.datetime.weekday(day_)
+
+if weekday_ < 6:
+    weekday_ = weekday_ + 1
+else:
+    weekday_ = 0
+
+weekday2 = days[weekday_]
+
+print('-'*23)
+print('Проверка при помощи встроенного модуля:', weekday==weekday2)    #сравнение результатов

@@ -7,7 +7,7 @@ monthes = {'мар': 1, 'апр': 2, 'мая': 3, 'июн': 4, 'июл': 5, 'а�
 days = ['воскресенье', 'понедельник', 'вторник', 'среда', 'четверг', 'пятница', 'суббота']
 
 # Объявление функций
-def get_data(string, month):
+def get_data(string, monthes):
     '''Функция преобразовывает строку пользователся в набор числовых
     значений для дальнейшей работы с ними.
 
@@ -19,10 +19,15 @@ def get_data(string, month):
 
     data = string.split()
     d = int(data[0])
-    m = month[data[1][0:3]]
+    m = monthes[data[1][0:3]]
     y = int(data[2]) % 100
+
     if m > 10:
         y -= 1
+
+    if y == -1:
+        y = 100
+
     c = int(data[2]) // 100
     return d, m, c, y
 
@@ -37,7 +42,7 @@ def get_answer(d, m, c, y):
 
     '''
 
-    answer = (d + int((13*m-1)/5) + y + int(y/4) -2*c + int(c/4) ) % 7
+    answer = (d + int((13*(m+1)/5) + y + int(y/4) + int(c/4) -2*c) % 7
     return answer
 
 def prettify(weekday, *data):
@@ -48,7 +53,11 @@ def prettify(weekday, *data):
     hunds = ["", "C", "CC", "CCC", "CD", "D", "DC", "DCC", "DCCC", "CM"]
     thous = ["", "M", "MM", "MMM", "MMMM"]
 
-    century = data[2] + 1
+    if data[3] != 100:
+        century = data[2] + 1
+    else:
+        century = data[2]
+
     t = thous[century // 1000]
     h = hunds[century // 100 % 10]
     te = tens[century // 10 % 10]
@@ -70,5 +79,5 @@ def prettify(weekday, *data):
 date = input('Введите дату >>> ')
 print('-' * 23)
 data = get_data(date, monthes)
-weekday =  days[get_answer(*data)]
+weekday = days[get_answer(*data)]
 prettify(weekday, *data)

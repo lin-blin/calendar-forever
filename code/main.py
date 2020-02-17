@@ -1,5 +1,7 @@
+import datetime
+
 # Тесты
-test = []
+test = ['29 февраля 2020', '1 июня 2015 ', '5 апреля 1242', '12 июня 1812', '24 октября 888']
 
 # Данные
 monthes = {'мар': 1, 'апр': 2, 'мая': 3, 'июн': 4, 'июл': 5, 'авг': 6, 'сен': 7, 'окт': 8, 'ноя': 9, 'дек': 10,
@@ -42,7 +44,7 @@ def get_answer(d, m, c, y):
 
     '''
 
-    answer = (d + int((13*(m+1)/5) + y + int(y/4) + int(c/4) -2*c) % 7
+    answer = (d + int((13 * m - 1) / 5) + y + int(y / 4) - 2 * c + int(c / 4)) % 7
     return answer
 
 def prettify(weekday, *data):
@@ -75,9 +77,41 @@ def prettify(weekday, *data):
         season = 'зима'
     print('Сезон: {0}'.format(season))
 
+    # Запись в TeX
+    f = open('log.tex', 'w+')
+    b = "\\documentclass{article}\n\\usepackage[cp1251]{inputenc}\n\\usepackage[russian]{babel}\n\n\\begin{document}"
+    b += "\n" + "Введите дату >>>" + date + "\n" + "-" * 23 + "\n" + "День недели: " + weekday + "\n" + "Век: " + (
+                t + h + te + o) + "\n" + "Сезон: " + season + "\n"
+    b += "\n\\end{document}"
+    f.write(b)
+    f.close()
+
 # Основная часть
 date = input('Введите дату >>> ')
 print('-' * 23)
 data = get_data(date, monthes)
 weekday = days[get_answer(*data)]
 prettify(weekday, *data)
+
+test_mod = False
+
+# Тестовый модуль
+if test_mod:
+    data = date.split()
+    d = int(data[0])
+    m1 = monthes[data[1][0:3]]
+    m = m1 - 10 if m1 > 10 else m1 + 2
+    y = int(data[2])
+
+    day_ = datetime.datetime(y, m, d)
+    weekday_ = datetime.datetime.weekday(day_)
+
+    if weekday_ < 6:
+        weekday_ = weekday_ + 1
+    else:
+        weekday_ = 0
+
+    weekday2 = days[weekday_]
+
+    print('-' * 23)
+    print('Проверка при помощи встроенного модуля:', weekday == weekday2)  # сравнение результатов

@@ -1,22 +1,18 @@
-import datetime
-
 # Тесты
-test = ['29 февраля 2020', '1 июня 2015 ', '5 апреля 1242', '12 июня 1812', '24 октября 888']
+test = []
 
 # Данные
-monthes = {'мар': 1, 'апр': 2, 'мая': 3, 'июн': 4, 'июл': 5, 'авг': 6, 'сен': 7, 'окт': 8, 'ноя': 9, 'дек': 10,
-             'янв': 11, 'фев': 12}
-days = ['воскресенье', 'понедельник', 'вторник', 'среда', 'четверг', 'пятница', 'суббота']
+monthes = {'мар': 3, 'апр': 4, 'мая': 5, 'июн': 6, 'июл': 7, 'авг': 8, 'сен': 9, 'окт': 10, 'ноя': 11, 'дек': 12,
+             'янв': 13, 'фев': 14}
+days = ['понедельник', 'вторник', 'среда', 'четверг', 'пятница', 'суббота', 'воскресенье']
 
 # Объявление функций
 def get_data(string, monthes):
     '''Функция преобразовывает строку пользователся в набор числовых
     значений для дальнейшей работы с ними.
-
     :param string typed string:
     :param month typed dict:
     :return day, month, century, year typed tuple:
-
     '''
 
     data = string.split()
@@ -35,16 +31,14 @@ def get_data(string, monthes):
 
 def get_answer(d, m, c, y):
     '''Функция вычисляет день недели по заданной пользователем дате.
-
     :param d typed int:
     :param m typed int:
     :param c typed int:
     :param y typed int:
     :return answer typed int (0-6):
-
     '''
 
-    answer = (d + int((13 * m - 1) / 5) + y + int(y / 4) - 2 * c + int(c / 4)) % 7
+    answer = (d + int((13 * m - 1) / 5) + y + int(y / 4) + int(c / 4) + 5 * c) % 7
     return answer
 
 def prettify(weekday, *data):
@@ -77,15 +71,6 @@ def prettify(weekday, *data):
         season = 'зима'
     print('Сезон: {0}'.format(season))
 
-    # Запись в TeX
-    f = open('log.tex', 'w+')
-    b = "\\documentclass{article}\n\\usepackage[cp1251]{inputenc}\n\\usepackage[russian]{babel}\n\n\\begin{document}"
-    b += "\n" + "Введите дату >>>" + date + "\n" + "-" * 23 + "\n" + "День недели: " + weekday + "\n" + "Век: " + (
-                t + h + te + o) + "\n" + "Сезон: " + season + "\n"
-    b += "\n\\end{document}"
-    f.write(b)
-    f.close()
-
 # Основная часть
 date = input('Введите дату >>> ')
 print('-' * 23)
@@ -93,25 +78,25 @@ data = get_data(date, monthes)
 weekday = days[get_answer(*data)]
 prettify(weekday, *data)
 
-test_mod = False
+#проверка при помощи встроенного модуля
 
-# Тестовый модуль
-if test_mod:
-    data = date.split()
-    d = int(data[0])
-    m1 = monthes[data[1][0:3]]
-    m = m1 - 10 if m1 > 10 else m1 + 2
-    y = int(data[2])
+import datetime
 
-    day_ = datetime.datetime(y, m, d)
-    weekday_ = datetime.datetime.weekday(day_)
+data = date.split()
+d = int(data[0])
+m1 = monthes[data[1][0:3]]
+m = m1 - 10 if m1 > 10 else m1 + 2
+y = int(data[2])
 
-    if weekday_ < 6:
-        weekday_ = weekday_ + 1
-    else:
-        weekday_ = 0
+day_ = datetime.datetime(y, m, d)
+weekday_ = datetime.datetime.weekday(day_)
 
-    weekday2 = days[weekday_]
+if weekday_ < 6:
+    weekday_ = weekday_ + 1
+else:
+    weekday_ = 0
 
-    print('-' * 23)
-    print('Проверка при помощи встроенного модуля:', weekday == weekday2)  # сравнение результатов
+weekday2 = days[weekday_]
+
+print('-'*23)
+print('Проверка при помощи встроенного модуля:', weekday==weekday2)    #сравнение результатов
